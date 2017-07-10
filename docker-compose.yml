@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  frontend:
+    container_name: intranet_frontend
+    build: .
+    environment:
+      - VIRTUAL_HOST=test.lempls.com
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=test.lempls.com
+      - LETSENCRYPT_EMAIL=flamecze@gmail.com
+    networks:
+         - default
+         - web-net
+
+networks:
+  default:
+  web-net:
+    external:
+      name: web-net
