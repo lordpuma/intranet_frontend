@@ -1,0 +1,10 @@
+<h1>Pracoviště</h1>
+<a href="#" routerLink="/workplace" class="float-right">Nové</a>
+<table class="table table-bordered">
+  <th>Název</th>
+  <th>Upravit</th>
+  <tr *ngFor="let workplace of workplaces">
+    <td>{{workplace.name}}</td>
+    <td><a href="#" routerLink="/workplace/{{workplace.id}}">X</a></td>
+  </tr>
+</table>

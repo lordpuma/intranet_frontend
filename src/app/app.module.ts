@@ -1,20 +1,79 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
+import { ApolloClient, createNetworkInterface } from 'apollo-client';
+import {ApolloModule} from 'apollo-angular';
+import { LoginComponent } from './login/login.component';
+import { HomeComponent } from './home/home.component';
+import { LogoutComponent } from './logout/logout.component';
+import { UsersComponent } from './users/users.component';
+import { WorkplacesComponent } from './workplaces/workplaces.component';
+import {LoginService} from './login.service';
+import { ShiftButtonComponent } from './shift-button/shift-button.component';
+import { ShiftsGridComponent } from './shifts-grid/shifts-grid.component';
+import {AuthGuard} from './auth.guard';
+import { UserFormComponent } from './user-form/user-form.component';
+import { SButtonComponent } from './sbutton/sbutton.component';
+import { environment } from '../environments/environment';
+import { WorkplaceFormComponent } from './workplace-form/workplace-form.component';
+import {appRoutes} from './app.routes';
+import { ChangePasswordComponent } from './change-password/change-password.component';
+import {AdminGuard} from './admin.guard';
+
+const networkInterface = createNetworkInterface({
+    uri: environment.url + 'query'
+  });
+
+const client = new ApolloClient({
+  networkInterface: networkInterface,
+});
+
+networkInterface.use([{
+  applyMiddleware(req, next) {
+    if (!req.options.headers) {
+      req.options.headers = {};  // Create the header object if needed.
+    }
+    req.options.headers['token'] = localStorage.getItem('token') ? localStorage.getItem('token') : null;
+    req.options.headers['Access-Control-Allow-Origin'] = environment.url;
+    next();
+  }
+}]);
+
+
+export function provideClient(): ApolloClient {
+  return client;
+}
+
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginComponent,
+    HomeComponent,
+    LogoutComponent,
+    UsersComponent,
+    WorkplacesComponent,
+    ShiftButtonComponent,
+    ShiftsGridComponent,
+    UserFormComponent,
+    SButtonComponent,
+    WorkplaceFormComponent,
+    ChangePasswordComponent
   ],
   imports: [
+    RouterModule.forRoot(appRoutes),
+    ApolloModule.forRoot(provideClient),
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule
   ],
-  providers: [],
+  providers: [LoginService, AuthGuard, AdminGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,19 @@
+<form [formGroup]="form" (submit)="submit()">
+  <div class="form-group">
+    <label for="name">Název</label>
+    <input type="text" class="form-control" id="name" placeholder="franta" formControlName="name">
+    <small id="usernameHelp" class="form-text text-muted">Používá se k přihlášení.</small>
+  </div>
+  <div class="form-group">
+    <label for="color">Barva popředí</label>
+    <input type="color" class="form-control" id="color" style="height: 30px;padding: 0" formControlName="color">
+    <small id="colorHelp" class="form-text text-muted">Barva textu tlačítka</small>
+  </div>
+  <div class="form-group">
+    <label for="bg_color">Barva pozadí</label>
+    <input type="color" class="form-control" id="bg_color" style="height: 30px;padding: 0" formControlName="bg_color">
+    <small id="bg_colorHelp" class="form-text text-muted">Barva textu tlačítka</small>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Uložit</button>
+</form>

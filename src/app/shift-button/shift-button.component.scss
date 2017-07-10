@@ -1,0 +1,93 @@
+.btn-shift {
+  height: 20px;
+  width: 150px;
+  line-height: 1;
+  padding: 0;
+  margin: 2px;
+}
+td, th {
+  margin: 0;
+  border-top-width: 0;
+  white-space: nowrap;
+}
+
+
+.scroll {
+  overflow-x: scroll;
+  overflow-y: visible;
+  border: 1px solid blue;
+}
+
+#magic2 {
+  height: 80vh;
+  margin-top: 0;
+}
+
+table {
+  table-layout: fixed;
+}
+
+//.btn {
+//  text-align: center;
+//  border: 1px solid red;
+//  width: 200px;
+//}
+
+.thead {
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+
+.thead div {
+  display: inline-block;
+  width: 150px;
+}
+
+.thead div div {
+  text-align: center;
+}
+
+.firstcol {
+  float: left;
+  height: 80vh;
+  overflow-y: hidden;
+}
+
+.sticky-top {
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -o-sticky;
+  position: -ms-sticky;
+  position: sticky;
+  top: 0px;
+  z-index: 2;
+}
+
+.sticky-left {
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -o-sticky;
+  position: -ms-sticky;
+  position: sticky;
+  left: 0px;
+  z-index: 1;
+}
+
+.sticky-bottom {
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -o-sticky;
+  position: -ms-sticky;
+  position: sticky;
+  bottom: 0px;
+  z-index: 3;
+}
+
+.thead {
+  background: #FFFFFF;
+  border: 2px solid black;
+}
+
+.brdr {
+  border: 2px solid black;
+}

@@ -1,3 +1,29 @@
-<h1>
-  {{title}}
-</h1>
+<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="#" routerLink="/">Intranet</a>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item" routerLinkActive="/">
+        <a class="nav-link" href="#" routerLink="/">Úvod</a>
+      </li>
+      <li class="nav-item" routerLinkActive="/users" *ngIf="isAdmin()">
+        <a class="nav-link" href="#" routerLink="/users" >Uživatelé</a>
+      </li>
+      <li class="nav-item" routerLinkActive="/workplaces" *ngIf="isAdmin()">
+        <a class="nav-link" href="#" routerLink="/workplaces">Pracoviště</a>
+      </li>
+      <li class="nav-item" routerLinkActive="/shifts">
+        <a class="nav-link" href="#" routerLink="/shifts">Směny</a>
+      </li>
+      <li class="nav-item" routerLinkActive="/pass">
+        <a class="nav-link" href="#" routerLink="/pass">Změnit heslo</a>
+      </li>
+    </ul>
+    <app-logout></app-logout>
+  </div>
+</nav>
+<br>
+<router-outlet></router-outlet>

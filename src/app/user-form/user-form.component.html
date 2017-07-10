@@ -1,0 +1,52 @@
+<h1>Upravit uživatele</h1> <a href="#" class="float-right" routerLink="/users">Zpět</a>
+<form [formGroup]="form" (submit)="submit()">
+  <div class="form-group">
+    <label for="username">Uživatelské jméno</label>
+    <input type="text" class="form-control" id="username" placeholder="franta" formControlName="username">
+    <small id="usernameHelp" class="form-text text-muted">Používá se k přihlášení.</small>
+  </div>
+  <div class="form-group">
+    <label>Heslo</label>
+    <p class="form-control-static">Heslo si nově každý uživatel nastaví sám při prvním přihlášení, pro první přihlášní stačí zadat uživatelské jméno.</p>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Email</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="franta@novak.cz" formControlName="email">
+    <small id="emailHelp" class="form-text text-muted">Mohl by se použít ke komunikaci. (nepovinný)</small>
+  </div>
+  <div class="form-group">
+    <label for="first_name">Křestní jméno</label>
+    <input type="text" class="form-control" id="first_name" aria-describedby="emailHelp" placeholder="Franta" formControlName="first_name">
+    <!--<small id="first_nameHelp" class="form-text text-muted">Mohl by se použít ke komunikaci. (nepovinný)</small>-->
+  </div>
+  <div class="form-group">
+    <label for="last_name">Příjmení</label>
+    <input type="text" class="form-control" id="last_name" placeholder="Novák" formControlName="last_name">
+    <!--<small id="last_nameHelp" class="form-text text-muted">Mohl by se použít ke komunikaci. (nepovinný)</small>-->
+  </div>
+  <div class="form-group">
+    <label for="color">Barva popředí</label>
+    <input type="color" class="form-control" id="color" style="height: 30px;padding: 0" formControlName="color">
+    <small id="colorHelp" class="form-text text-muted">Barva textu tlačítka</small>
+  </div>
+  <div class="form-group">
+    <label for="bg_color">Barva pozadí</label>
+    <input type="color" class="form-control" id="bg_color" style="height: 30px;padding: 0" formControlName="bg_color">
+    <small id="bg_colorHelp" class="form-text text-muted">Barva textu tlačítka</small>
+  </div>
+  <div class="form-group">
+    <label for="perms">Oprávnění</label>
+    <select multiple class="form-control" id="perms" formControlName="perms">
+      <option value="admin">Administrátor</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="workplaces">Pozice</label>
+    <select multiple class="form-control" id="workplaces" formControlName="workplaces">
+      <option *ngFor="let w of workplaces" [value]="w.id">{{w.name}}</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Uložit</button>
+  <button type="button" class="btn btn-danger" (click)="resetPass()" *ngIf="id">Resetovat heslo</button>
+</form>
