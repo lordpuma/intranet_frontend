@@ -6,4 +6,7 @@ COPY ./dist /srv/http/intranet
 
 EXPOSE 80
 
-CMD ["go-wrapper", "run"] # ["app"]
+WORKDIR /etc/nginx
+
+# Define default command.
+CMD ["nginx"]
