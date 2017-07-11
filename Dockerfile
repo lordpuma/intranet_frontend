@@ -5,8 +5,3 @@ COPY ./dist /srv/http/intranet
 
 
 EXPOSE 80
-
-WORKDIR /etc/nginx
-
-# Define default command.
-CMD ["nginx"]
