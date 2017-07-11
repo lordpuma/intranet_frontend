@@ -36,10 +36,7 @@ const editShift = gql`
 
 const deleteShift = gql`
   mutation deleteShift($id: Int!) {
-    deleteShift(Id: $id) {
-      id,
-      user {id, name, color, bgColor}
-    }
+    deleteShift(Id: $id) 
   }
 `;
 
