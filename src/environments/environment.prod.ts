@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  url: 'https://iapi.lempls.com/'
+  url: 'https://intranet-backend.herokuapp.com/'
 };
