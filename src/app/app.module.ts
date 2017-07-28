@@ -23,6 +23,7 @@ import { WorkplaceFormComponent } from './workplace-form/workplace-form.componen
 import {appRoutes} from './app.routes';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import {AdminGuard} from './admin.guard';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 const networkInterface = createNetworkInterface({
     uri: environment.url + 'query'
@@ -68,6 +69,7 @@ export function provideClient(): ApolloClient {
   imports: [
     RouterModule.forRoot(appRoutes),
     ApolloModule.forRoot(provideClient),
+    NgbModule.forRoot(),
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,

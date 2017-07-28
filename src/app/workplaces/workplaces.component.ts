@@ -34,9 +34,8 @@ export class WorkplacesComponent implements OnInit {
   constructor(private apollo: Apollo) { }
 
   ngOnInit() {
-    this.apollo.watchQuery<QueryResponse>({
+    this.apollo.query<QueryResponse>({
       query: CurrentWorkplaces,
-      pollInterval: 2000,
     }).subscribe(({data}) => {
       if (data) {
         this.workplaces = data.workplaces;

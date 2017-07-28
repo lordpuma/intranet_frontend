@@ -34,9 +34,8 @@ export class UsersComponent implements OnInit {
   constructor(private apollo: Apollo) { }
 
   ngOnInit() {
-    this.apollo.watchQuery<QueryResponse>({
+    this.apollo.query<QueryResponse>({
       query: CurrentUsers,
-      pollInterval: 2000,
     }).subscribe(({data}) => {
       if (data) {
         this.users = data.users;

@@ -4,6 +4,8 @@ import {Apollo} from 'apollo-angular';
 import gql from 'graphql-tag';
 import {Http, Headers} from '@angular/http';
 import { environment } from '../environments/environment';
+import {el} from '@angular/platform-browser/testing/src/browser_util';
+import {isUndefined} from 'util';
 
 const CurrentUser = gql`
   query CurrentUserId {
@@ -97,9 +99,13 @@ export class LoginService {
 
   isAdmin(): Promise<boolean> {
     return new Promise((res, rej) => {
-      this.isLogged().then((r) =>
-        res(this.user.perms.includes('admin')
-        ));
+      this.isLogged().then((r) => {
+        if (this.user && !isUndefined(this.user.perms)) {
+          res(this.user.perms.includes('admin'));
+        } else {
+          res(false);
+        }
+      });
     });
   }
 

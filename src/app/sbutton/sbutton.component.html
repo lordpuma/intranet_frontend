@@ -1,20 +1,22 @@
-<div class="dropdown" *ngIf="admin">
-  <button class="btn btn-primary btn-shift dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-          [ngStyle]="style(s)"
-          (contextmenu)="deleteUser(s.id, $event)"
-  >
-    {{name(s)}}
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="#" *ngFor="let u of users" (contextmenu)="insertUser(u.id, $event)" (click)="changeUser(u.id, s, $event)">{{u.name}}</a>
-  </div>
-</div>
-
-<div *ngIf="!admin">
-  <button class="btn btn-shift"
+<div ngbDropdown
+     #myDrop="ngbDropdown"
+>
+  <button [ngClass]="{'btn': true, 'btn-primary': true, 'btn-shift': true, 'dropdown-toggle': admin}"
           type="button"
+          ngbDropdownToggle
           [ngStyle]="style(s)"
+          (contextmenu)="deleteUser(getId(s), $event)"
   >
     {{name(s)}}
   </button>
+  <div class="dropdown-menu" *ngIf="admin">
+    <a class="dropdown-item"
+       href="#"
+       *ngFor="let u of users"
+       (contextmenu)="insertUser(u.id, $event)"
+       (click)="changeUser(u.id, s, $event)"
+    >
+      {{u.name}}
+    </a>
+  </div>
 </div>

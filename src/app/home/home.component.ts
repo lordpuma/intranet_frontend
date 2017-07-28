@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import {Apollo} from 'apollo-angular';
 import gql from 'graphql-tag';
-const CurrentUser = gql`
-  query CurrentUserName {
-    thisUser {
-    id,
-    name
-    }
+
+const Shift = gql`
+  query allShifts($date: String!) {
+    allShifts(Date: $date) {
+      Day, Workplaces {
+        Id, Shifts {
+          id
+        }
+      }
+    },
   }
 `;
 
@@ -20,16 +24,17 @@ interface Rtrn {
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  user;
-  date = new Date('2017-01-02');
 
   constructor(private apollo: Apollo) { }
 
   ngOnInit() {
-    this.apollo.query<Rtrn>({
-      query: CurrentUser,
-    }).subscribe(({data}) => {
-      this.user = data.thisUser;
+    this.apollo.query({
+      query: Shift,
+      variables: {
+        'date': '2017-07'
+      }
+      }).subscribe((res) => {
+      console.log(res);
     });
   }
 

@@ -1,5 +1,5 @@
 <div class="form-group">
-  <input type="month" class="form-control" (change)="test()" [(ngModel)]="t" value="t">
+  <input type="month" class="form-control" (change)="omg()" [(ngModel)]="t" value="t">
 </div>
 <table>
   <thead class="sticky-top thead">
@@ -11,7 +11,7 @@
   <tr *ngFor="let d of days" style="border: 2px solid black">
     <td class="sticky-left thead" [ngStyle]="{'background-color': getBgForDay(d)}">{{d}}</td>
     <td *ngFor="let w of workplaces" class="align-top">
-      <app-shift-button [day]="d" [date]="t" [workplace]="w.id"></app-shift-button>
+      <app-shift-button (r)="omg()" [day]="d" [date]="t" [workplace]="w.id" [shifts]="getShifts(d, w.id)"></app-shift-button>
     </td>
   </tr>
 </table>

@@ -1,6 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges} from '@angular/core';
-import {Apollo, ApolloQueryObservable} from 'apollo-angular';
+import {
+  Component, EventEmitter, Input, OnInit, Output, ViewChild,
+} from '@angular/core';
+import {Apollo} from 'apollo-angular';
 import gql from 'graphql-tag';
+import {NgbDropdown} from '@ng-bootstrap/ng-bootstrap';
+import {LoginService} from '../login.service';
 
 
 const insertShift = gql`
@@ -27,13 +31,6 @@ const deleteShift = gql`
   }
 `;
 
-interface Shifts {
-  shifts: [Shift];
-  freeUsers: [User];
-}
-interface UserR {
-  user: User;
-}
 interface InsShifts {
   insertShift: Shift;
 }
@@ -58,19 +55,32 @@ interface User {
 @Component({
   selector: 'app-sbutton',
   templateUrl: './sbutton.component.html',
-  styleUrls: ['./sbutton.component.scss']
+  styleUrls: ['./sbutton.component.scss'],
 })
 export class SButtonComponent implements OnInit {
   @Input() s: Shift;
   @Input() date: string;
   @Input() workplace: number;
-  @Input() admin: boolean;
   @Input() users: User[];
   @Output() refetch = new EventEmitter<boolean>();
+  @Output() fetchUsers = new EventEmitter<boolean>();
+  @ViewChild('myDrop') el: NgbDropdown;
+  admin = false;
 
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo, private login: LoginService) {
+  }
 
   ngOnInit() {
+    this.login.isAdmin().then((admin) => {
+      this.admin = admin;
+      if (admin && this.el) {
+        this.el.openChange.subscribe((open) => {
+          if (open) {
+            this.fetchUsers.emit(true);
+          }
+        });
+      }
+    });
   }
 
   style(u: Shift) {
@@ -91,6 +101,7 @@ export class SButtonComponent implements OnInit {
 
   insertUser(id: number, e: Event) {
     e.preventDefault();
+    this.el.close();
     this.apollo.mutate<InsShifts>({
       mutation: insertShift,
       variables: {
@@ -116,7 +127,7 @@ export class SButtonComponent implements OnInit {
         variables: {
           id: shift.id,
           user: u,
-        }
+        },
       }).subscribe(() => {
         this.refetch.emit(true);
       }, (error) => {
@@ -124,18 +135,23 @@ export class SButtonComponent implements OnInit {
       });
     }
   }
+
   deleteUser(shift: number, e: Event) {
     e.preventDefault();
     this.apollo.mutate<DltShifts>({
       mutation: deleteShift,
       variables: {
         id: shift,
-      }
+      },
     }).subscribe(() => {
       this.refetch.emit(true);
     }, (error) => {
       console.log('there was an error sending the query', error);
     });
+  }
+
+  getId(s) {
+    return s ? s.id : 0;
   }
 
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import gql from 'graphql-tag';
-import {Apollo} from 'apollo-angular';
+import {Apollo, ApolloQueryObservable} from 'apollo-angular';
 
 const CurrentWorkplaces = gql`
   query CurrentWorkplaces {
@@ -23,6 +23,43 @@ interface Workplace {
   id: number;
 }
 
+const AllShifts = gql`
+  query allShifts($date: String!) {
+    allShifts(Date: $date) {
+      Day, Workplaces {
+        Id, Shifts {
+          id,
+          user {id, name, color, bgColor}
+        }
+      }
+    },
+  }
+`;
+interface Rtrn {
+  allShifts: [DayType];
+}
+interface DayType {
+  Day: number;
+  Workplaces: [W];
+}
+
+interface W {
+  Id: number;
+  Shifts: [Shift];
+}
+
+interface Shift {
+  id: number;
+  user: User;
+}
+interface User {
+  id: number;
+  name: string;
+  color: string;
+  bgColor: string;
+  perms: [string];
+}
+
 
 @Component({
   selector: 'app-shifts-grid',
@@ -33,6 +70,8 @@ export class ShiftsGridComponent implements OnInit {
   t;
   days;
   workplaces;
+  query: ApolloQueryObservable<Rtrn>;
+  shifts: [DayType];
   constructor(private apollo: Apollo) { }
 
   ngOnInit() {
@@ -45,6 +84,28 @@ export class ShiftsGridComponent implements OnInit {
         this.workplaces = data.workplaces;
       }
     });
+    this.query = this.apollo.watchQuery<Rtrn>({
+      query: AllShifts,
+      variables: {
+        'date': this.t
+      }
+    });
+    this.query.subscribe((res) => {
+      this.shifts = res.data.allShifts;
+    });
+  }
+
+  getShifts(d, w) {
+    if (this.shifts) {
+      const x = this.shifts.find((r) => r.Day === d);
+      if (x) {
+        const v = x.Workplaces.find((r) => r.Id === w);
+        return v ? v.Shifts : [];
+      } else {
+        return [];
+      }
+    }
+    return [];
   }
 
   daysInMonth(anyDateInMonth) {
@@ -63,5 +124,10 @@ export class ShiftsGridComponent implements OnInit {
 
   getBgForDay(d) {
     return this.isWeekend(d) ? '#999999' : '#FFFFFF';
+  }
+
+  omg() {
+    this.query.setVariables({date: this.t});
+    this.query.refetch();
   }
 }

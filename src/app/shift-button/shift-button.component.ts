@@ -1,7 +1,8 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import gql from 'graphql-tag';
 import {Apollo, ApolloQueryObservable} from 'apollo-angular';
 import {Subject} from 'rxjs/Subject';
+import {LoginService} from '../login.service';
 
 const Shift = gql`
   query shifts($date: String!, $workplace: Int!) {
@@ -9,6 +10,14 @@ const Shift = gql`
       id,
       user {id, name, color, bgColor}
     },
+    freeUsers(Workplace: $workplace, Date: $date) {
+      name, id
+    }
+  }
+`;
+
+const CurrentUsers = gql`
+  query shifts($date: String!, $workplace: Int!) {
     freeUsers(Workplace: $workplace, Date: $date) {
       name, id
     }
@@ -91,13 +100,15 @@ export class ShiftButtonComponent implements OnInit, OnChanges {
   @Input() date: string;
   @Input() day: number;
   @Input() workplace: number;
-  shifts: Shift[];
+  @Input() shifts: Shift[];
+  @Output() r = new EventEmitter<boolean>();
+
   users: User[];
   query: ApolloQueryObservable<Shifts>;
   $date: Subject<string> = new Subject<string>();
   user: User;
 
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo, private login: LoginService) {}
 
   ngOnInit() {
     this.apollo.query<Rtrn>({
@@ -105,23 +116,9 @@ export class ShiftButtonComponent implements OnInit, OnChanges {
     }).subscribe(({data}) => {
       this.user = data.thisUser;
     });
-    this.query = this.apollo.watchQuery<Shifts>({
-      query: Shift,
-      variables: {date: this.$date, workplace: this.workplace},
-    });
-    this.query.subscribe(({data}) => {
-      this.shifts = data.shifts;
-      this.users = data.freeUsers;
-    });
     this.$date.next(this.getDate());
   }
 
-  isAdmin() {
-    if (!this.user) {
-      return false;
-    }
-    return this.user.perms.includes('admin');
-  }
 
   getDate() {
     return this.date + '-' + this.day;
@@ -129,10 +126,18 @@ export class ShiftButtonComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     this.$date.next(this.getDate());
-    if (this.query) {this.query.refetch().then(() => console.log('heh')); }
   }
 
   refetch() {
-    this.query.refetch();
+    this.r.emit(true);
+  }
+
+  fetchUsers() {
+   this.apollo.query<Shifts>({
+        query: CurrentUsers,
+        variables: {date: this.getDate(), workplace: this.workplace},
+      }).subscribe(({data}) => {
+        this.users = data.freeUsers;
+      });
   }
 }

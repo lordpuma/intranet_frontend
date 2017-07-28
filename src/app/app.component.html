@@ -6,7 +6,7 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item" routerLinkActive="/">
+      <li class="nav-item" routerLinkActive="/" *ngIf="isLogged()">
         <a class="nav-link" href="#" routerLink="/">Úvod</a>
       </li>
       <li class="nav-item" routerLinkActive="/users" *ngIf="isAdmin()">
@@ -15,11 +15,15 @@
       <li class="nav-item" routerLinkActive="/workplaces" *ngIf="isAdmin()">
         <a class="nav-link" href="#" routerLink="/workplaces">Pracoviště</a>
       </li>
-      <li class="nav-item" routerLinkActive="/shifts">
+      <li class="nav-item" routerLinkActive="/shifts" *ngIf="isLogged()">
         <a class="nav-link" href="#" routerLink="/shifts">Směny</a>
       </li>
-      <li class="nav-item" routerLinkActive="/pass">
+      <li class="nav-item" routerLinkActive="/pass" *ngIf="isLogged()">
         <a class="nav-link" href="#" routerLink="/pass">Změnit heslo</a>
+      </li>
+
+      <li class="nav-item" routerLinkActive="/pass" *ngIf="!isLogged()">
+        <a class="nav-link" href="#" routerLink="/login">Přihlášení</a>
       </li>
     </ul>
     <app-logout></app-logout>
