@@ -24,6 +24,7 @@ import {appRoutes} from './app.routes';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import {AdminGuard} from './admin.guard';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { SweetAlertService } from 'ng2-sweetalert2';
 
 const networkInterface = createNetworkInterface({
     uri: environment.url + 'query'
@@ -75,7 +76,7 @@ export function provideClient(): ApolloClient {
     ReactiveFormsModule,
     HttpModule
   ],
-  providers: [LoginService, AuthGuard, AdminGuard],
+  providers: [LoginService, AuthGuard, AdminGuard, SweetAlertService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

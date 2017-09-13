@@ -9,7 +9,7 @@
   <tr *ngFor="let user of users">
     <td>{{user.name}}</td>
     <td>{{user.username}}</td>
-    <td><app-sbutton [s]="{'user': user}"></app-sbutton></td>
+    <td><app-sbutton [a]="false" [s]="{'user': user}"></app-sbutton></td>
     <td><a href="#" routerLink="/user/{{user.id}}">X</a></td>
     <td><a href="#" (click)="remove(u.id, $event)">X</a></td>
   </tr>

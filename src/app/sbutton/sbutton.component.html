@@ -18,5 +18,17 @@
     >
       {{u.name}}
     </a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item"
+       (click)="note(s.Id, $event)"
+    >
+      Přidat poznámku
+    </a>
+    <a class="dropdown-item"
+       *ngIf="getId(s) != 0"
+       (click)="deleteUser(getId(s), $event)"
+    >
+      Odebrat směnu
+    </a>
   </div>
 </div>

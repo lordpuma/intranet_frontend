@@ -5,6 +5,7 @@ import {Apollo} from 'apollo-angular';
 import gql from 'graphql-tag';
 import {NgbDropdown} from '@ng-bootstrap/ng-bootstrap';
 import {LoginService} from '../login.service';
+import { SweetAlertService } from 'ng2-sweetalert2';
 
 
 const insertShift = gql`
@@ -65,18 +66,41 @@ export class SButtonComponent implements OnInit {
   @Output() refetch = new EventEmitter<boolean>();
   @Output() fetchUsers = new EventEmitter<boolean>();
   @ViewChild('myDrop') el: NgbDropdown;
+  @Input() a = true;
   admin = false;
 
-  constructor(private apollo: Apollo, private login: LoginService) {
+  constructor(private apollo: Apollo, private login: LoginService, private swal: SweetAlertService) {
   }
 
+
   ngOnInit() {
-    this.login.isAdmin().then((admin) => {
-      this.admin = admin;
-      if (admin && this.el) {
-        this.el.openChange.subscribe((open) => {
-          if (open) {
-            this.fetchUsers.emit(true);
+    if (this.a) {
+      this.login.isAdmin().then((admin) => {
+        this.admin = admin;
+        if (admin && this.el) {
+          this.el.openChange.subscribe((open) => {
+            if (open) {
+              this.fetchUsers.emit(true);
+            }
+          });
+        }
+      });
+    }
+  }
+
+  note(id: number, e: Event) {
+    e.preventDefault();
+    console.log(this.swal);
+    this.swal.swal({
+      title: 'Input something',
+      input: 'text',
+      showCancelButton: true,
+      inputValidator: function (value) {
+        return new Promise(function (resolve, reject) {
+          if (value) {
+            resolve();
+          } else {
+            reject('You need to write something!');
           }
         });
       }

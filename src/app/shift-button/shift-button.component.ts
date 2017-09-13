@@ -4,18 +4,6 @@ import {Apollo, ApolloQueryObservable} from 'apollo-angular';
 import {Subject} from 'rxjs/Subject';
 import {LoginService} from '../login.service';
 
-const Shift = gql`
-  query shifts($date: String!, $workplace: Int!) {
-    shifts(Date: $date, Workplace: $workplace) {
-      id,
-      user {id, name, color, bgColor}
-    },
-    freeUsers(Workplace: $workplace, Date: $date) {
-      name, id
-    }
-  }
-`;
-
 const CurrentUsers = gql`
   query shifts($date: String!, $workplace: Int!) {
     freeUsers(Workplace: $workplace, Date: $date) {
@@ -67,18 +55,6 @@ interface Shifts {
   shifts: [Shift];
   freeUsers: [User];
 }
-interface UserR {
-  user: User;
-}
-interface InsShifts {
-  insertShift: Shift;
-}
-interface EdtShifts {
-  editShift: Shift;
-}
-interface DltShifts {
-  deleteShift: number;
-}
 interface Shift {
   id: number;
   user: User;
@@ -103,6 +79,7 @@ export class ShiftButtonComponent implements OnInit, OnChanges {
   @Input() shifts: Shift[];
   @Output() r = new EventEmitter<boolean>();
 
+  uquery: ApolloQueryObservable<Shifts>;
   users: User[];
   query: ApolloQueryObservable<Shifts>;
   $date: Subject<string> = new Subject<string>();
@@ -111,6 +88,13 @@ export class ShiftButtonComponent implements OnInit, OnChanges {
   constructor(private apollo: Apollo, private login: LoginService) {}
 
   ngOnInit() {
+    this.uquery = this.apollo.watchQuery<Shifts>({
+      query: CurrentUsers,
+      variables: {date: this.getDate(), workplace: this.workplace},
+    });
+    this.uquery.subscribe(({data}) => {
+      this.users = data.freeUsers;
+    });
     this.apollo.query<Rtrn>({
       query: CurrentUser,
     }).subscribe(({data}) => {
@@ -130,14 +114,10 @@ export class ShiftButtonComponent implements OnInit, OnChanges {
 
   refetch() {
     this.r.emit(true);
+    this.fetchUsers();
   }
 
   fetchUsers() {
-   this.apollo.query<Shifts>({
-        query: CurrentUsers,
-        variables: {date: this.getDate(), workplace: this.workplace},
-      }).subscribe(({data}) => {
-        this.users = data.freeUsers;
-      });
+  this.uquery.refetch();
   }
 }
