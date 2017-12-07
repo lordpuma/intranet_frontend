@@ -1,0 +1,10 @@
+<a href="#" (click)="$event.preventDefault();router.navigate(['/racesnew'])">Nový</a>
+<table class="table table-bordered table-responsive">
+  <th>Jméno</th>
+  <th>Aktivovat</th>
+  <tr *ngFor="let race of races">
+    <td>{{race.name}}</td>
+    <td *ngIf="race.active"><a href="#" (click)="$event.preventDefault();activate(race.id, false)">Deaktivovat</a></td>
+    <td *ngIf="!race.active"><a href="#" (click)="$event.preventDefault();activate(race.id, true)">Aktivovat</a></td>
+  </tr>
+</table>

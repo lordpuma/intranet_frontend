@@ -29,7 +29,8 @@ const AllShifts = gql`
       Day, Workplaces {
         Id, Shifts {
           id,
-          user {id, name, color, bgColor}
+          user {id, shortName, color, bgColor},
+          note
         }
       }
     },

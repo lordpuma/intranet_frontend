@@ -2,8 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { RouterModule, Routes } from '@angular/router';
-
+import { RouterModule} from '@angular/router';
 import { AppComponent } from './app.component';
 import { ApolloClient, createNetworkInterface } from 'apollo-client';
 import {ApolloModule} from 'apollo-angular';
@@ -25,7 +24,11 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import {AdminGuard} from './admin.guard';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { SweetAlertService } from 'ng2-sweetalert2';
-
+import { RacesListComponent } from './races-list/races-list.component';
+import { RaceFormComponent } from './race-form/race-form.component';
+import { ResultsTableComponent } from './results-table/results-table.component';
+import { OrderResultsPipe } from './order-results.pipe';
+import {NgPipesModule} from 'ngx-pipes';
 const networkInterface = createNetworkInterface({
     uri: environment.url + 'query'
   });
@@ -37,7 +40,7 @@ const client = new ApolloClient({
 networkInterface.use([{
   applyMiddleware(req, next) {
     if (!req.options.headers) {
-      req.options.headers = {};  // Create the header object if needed.
+      // req.options.headers = {};  // Create the header object if needed.
     }
     req.options.headers['token'] = localStorage.getItem('token') ? localStorage.getItem('token') : null;
     req.options.headers['Access-Control-Allow-Origin'] = environment.url;
@@ -65,7 +68,11 @@ export function provideClient(): ApolloClient {
     UserFormComponent,
     SButtonComponent,
     WorkplaceFormComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    RacesListComponent,
+    RaceFormComponent,
+    ResultsTableComponent,
+    OrderResultsPipe,
   ],
   imports: [
     RouterModule.forRoot(appRoutes),
@@ -74,7 +81,8 @@ export function provideClient(): ApolloClient {
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpModule
+    HttpModule,
+    NgPipesModule,
   ],
   providers: [LoginService, AuthGuard, AdminGuard, SweetAlertService],
   bootstrap: [AppComponent]

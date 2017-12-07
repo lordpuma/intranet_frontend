@@ -17,7 +17,7 @@ const insertShift = gql`
   mutation insertShift($user: Int!, $date: String!, $workplace: Int!, $note: String) {
     insertShift(Userid: $user, Date: $date, Workplaceid: $workplace, Note: $note) {
       id,
-      user {id, name, color, bgColor}
+      user {id, shortName, color, bgColor}
     }
   }
 `;
@@ -26,7 +26,7 @@ const editShift = gql`
   mutation editShift($user: Int!, $id: Int!) {
     editShift(Id: $id, Userid: $user) {
       id,
-      user {id, name, color, bgColor}
+      user {id, shortName, color, bgColor}
     }
   }
 `;

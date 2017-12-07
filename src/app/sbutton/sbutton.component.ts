@@ -12,7 +12,7 @@ const insertShift = gql`
   mutation insertShift($user: Int!, $date: String!, $workplace: Int!, $note: String) {
     insertShift(Userid: $user, Date: $date, Workplaceid: $workplace, Note: $note) {
       id,
-      user {id, name, color, bgColor}
+      user {id, shortName, color, bgColor}
     }
   }
 `;
@@ -21,7 +21,15 @@ const editShift = gql`
   mutation editShift($user: Int!, $id: Int!) {
     editShift(Id: $id, Userid: $user) {
       id,
-      user {id, name, color, bgColor}
+      user {id, shortName, color, bgColor}
+    }
+  }
+`;
+
+const addNote = gql`
+  mutation addNote($note: String, $id: Int!) {
+    editShift(Id: $id, Note: $note) {
+      id
     }
   }
 `;
@@ -44,10 +52,11 @@ interface DltShifts {
 interface Shift {
   id: number;
   user: User;
+  note: string;
 }
 interface User {
   id: number;
-  name: string;
+  shortName: string;
   color: string;
   bgColor: string;
   perms: [string];
@@ -90,22 +99,49 @@ export class SButtonComponent implements OnInit {
 
   note(id: number, e: Event) {
     e.preventDefault();
-    console.log(this.swal);
+    const self = this;
     this.swal.swal({
-      title: 'Input something',
+      title: 'Zadejte poznámku',
       input: 'text',
       showCancelButton: true,
       inputValidator: function (value) {
         return new Promise(function (resolve, reject) {
           if (value) {
-            resolve();
+            self.apollo.mutate<EdtShifts>({
+              mutation: addNote,
+              variables: {
+                id: id,
+                note: value,
+              },
+            }).subscribe(() => {
+              self.refetch.emit(true);
+              resolve(value);
+            }, (error) => {
+              console.log('there was an error sending the query', error);
+            });
           } else {
-            reject('You need to write something!');
+            reject('Je nutno vyplnit poznámku!');
           }
         });
       }
     });
   }
+
+  dltNote(id: number, e: Event) {
+    e.preventDefault();
+    this.apollo.mutate<EdtShifts>({
+      mutation: addNote,
+      variables: {
+        id: id,
+        note: 'RESET NOTE PLS',
+      },
+    }).subscribe(() => {
+      this.refetch.emit(true);
+    }, (error) => {
+      console.log('there was an error sending the query', error);
+    });
+  }
+
 
   style(u: Shift) {
     if (u) {
@@ -115,9 +151,12 @@ export class SButtonComponent implements OnInit {
     }
   }
 
-  name(name: Shift) {
-    if (name) {
-      return name.user.name;
+  name(shift: Shift) {
+    if (shift) {
+      if (shift.note) {
+        return shift.user.shortName + ' (' + shift.note + ')';
+      }
+      return shift.user.shortName;
     } else {
       return 'VOLNO';
     }
@@ -176,6 +215,10 @@ export class SButtonComponent implements OnInit {
 
   getId(s) {
     return s ? s.id : 0;
+  }
+
+  hasNote(s) {
+    return s ? (!!s.note) : false;
   }
 
 }

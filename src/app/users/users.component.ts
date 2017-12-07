@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 const CurrentUsers = gql`
   query CurrentUsers {
     users {
-    id, name, bgColor, color, username
+    id, name, shortName, bgColor, color, username
     }
   }
 `;

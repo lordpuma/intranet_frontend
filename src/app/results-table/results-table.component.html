@@ -1,0 +1,28 @@
+<div class="form-group">
+  <select (change)="change()" [(ngModel)]="race">
+    <option
+      *ngFor="let race of races"
+      value="{{race.id}}">
+      {{race.name}}
+    </option>
+  </select>
+
+  <select  (change)="changeStyle()" [(ngModel)]="style">
+    <option value="min" selected>
+     Nejrychlejší čas
+    </option>
+    <option value="average">
+     Průměrný čas
+    </option>
+  </select>
+</div>
+
+<table class="table table-responsive table-bordered">
+  <th>Jméno</th>
+  <th>Čas</th>
+  <tr *ngFor="let result of results| orderBy: style">
+    <td>{{result.name}}</td>
+    <td *ngIf="style == 'min'">{{result.min}}</td>
+    <td *ngIf="style == 'average'">{{result.average}}</td>
+  </tr>
+</table>
